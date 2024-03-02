@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Video.js Видеоплеер с передачей ссылки через GET-запрос</title>
-    <link rel="stylesheet" href="https://vjs.zencdn.net/7.15.4/video-js.css" />
-    <script src="https://vjs.zencdn.net/7.15.4/video.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-quality-levels/2.0.11/videojs-contrib-quality-levels.js"></script>
+    <title>MediaElement.js Видеоплеер с автоматической адаптацией кодека MP4</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.13/mediaelement-and-player.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.13/mediaelementplayer.css" />
     <style>
         body {
             text-align: center;
@@ -13,30 +12,27 @@
     </style>
 </head>
 <body>
-    <h1>Video.js Видеоплеер с передачей ссылки через GET-запрос</h1>
-    <video id="player" class="video-js vjs-default-skin" controls preload="none" width="400" height="300">
-        <source src="" type="video/mp4">
+    <h1>MediaElement.js Видеоплеер с автоматической адаптацией кодека MP4</h1>
+    <video id="player" controls preload="none" width="400" height="300">
+        <source src="" type="video/mp4" />
     </video>
 
     <script>
         var urlParams = new URLSearchParams(window.location.search);
         var videoUrl = urlParams.get('video_url');
-        if (!videoUrl) {
-            // Если параметр video_url отсутствует, выведите ошибку или выполните необходимое действие
-            alert('Параметр video_url не найден');
-        } else {
-            var player = videojs('player', {
-                autoplay: true,
-                fluid: true
-            });
-    
-            player.qualityLevels();
-    
-            player.src({
-                src: videoUrl,
-                type: 'video/mp4'
-            });
-        }
+        
+        var player = new MediaElementPlayer('#player', {
+            features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen'],
+            plugins: ['mediaelement-migrate', 'flash', 'silverlight'],
+            success: function (mediaElement, originalNode, instance) {
+                var sources = [{
+                    src: videoUrl,
+                    type: 'video/mp4'
+                }];
+                mediaElement.setSrc(sources);
+                mediaElement.load();
+            }
+        });
     </script>
 </body>
 </html>
