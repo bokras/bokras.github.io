@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>HTML5 Видео Плеер</title>
+    <title>Video.js Видеоплеер с передачей ссылки через GET-запрос</title>
+    <link rel="stylesheet" href="https://vjs.zencdn.net/7.15.4/video-js.css" />
+    <script src="https://vjs.zencdn.net/7.15.4/video.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-quality-levels/2.0.11/videojs-contrib-quality-levels.js"></script>
     <style>
         body {
             text-align: center;
@@ -10,20 +13,30 @@
     </style>
 </head>
 <body>
-    <h1>HTML5 Видео Плеер</h1>
-    <video id="player" controls preload="none" width="400" height="300">
-        <source src="" type="video/mp4" />
+    <h1>Video.js Видеоплеер с передачей ссылки через GET-запрос</h1>
+    <video id="player" class="video-js vjs-default-skin" controls preload="none" width="400" height="300">
+        <source src="" type="video/mp4">
     </video>
 
     <script>
         var urlParams = new URLSearchParams(window.location.search);
-        var videoUrl = urlParams.get('videourl');
-        
-        var player = document.getElementById('player');
-        var source = player.getElementsByTagName('source')[0];
-        
-        source.src = videoUrl;
-        player.load();
+        var videoUrl = urlParams.get('video_url');
+        if (!videoUrl) {
+            // Если параметр video_url отсутствует, выведите ошибку или выполните необходимое действие
+            alert('Параметр video_url не найден');
+        } else {
+            var player = videojs('player', {
+                autoplay: true,
+                fluid: true
+            });
+    
+            player.qualityLevels();
+    
+            player.src({
+                src: videoUrl,
+                type: 'video/mp4'
+            });
+        }
     </script>
 </body>
 </html>
